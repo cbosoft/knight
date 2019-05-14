@@ -1,19 +1,82 @@
 #!/bin/bash
 
+TEMPLATEDIR="$HOME/gits/knight/templates"
+VARSFILE="$HOME/.knight_vars.sed"
+
 usage() {
   echo ""
   echo " knight is a template-based file generator."
   echo ""
   echo " Usage:"
-  echo "   knight -f <file-type>"
+  echo "   knight <template-name> [<output-name>]"
   echo ""
-  echo " This will copy the template file from ~/.templates and"
+  echo " This will copy the template file from \"$TEMPLATEDIR\" and"
   echo " perform some variable substitution on the file, depending"
-  echo " on the sed script ~/.knight_vars and the output of some"
+  echo " on the sed script \"$VARSFILE\" and the output of some"
   echo " commands."
   echo ""
 }
 
-FILE="NONE"
+TEMPLATENAME=
+OUTPUTNAME=
+
 DATE=$(date +"%d %B %Y")
 YEAR=$(date +%Y)
+
+
+## Options parsing
+while [[ $# -gt 0 ]]
+do
+  key="$1"
+  case $key in
+    *)
+      if [[ -z $TEMPLATENAME ]]
+      then
+        TEMPLATENAME=$key
+      elif [[ -z $OUTPUTNAME ]]
+      then
+        OUTPUTNAME=$key
+      else
+        usage && exit 1
+      fi
+      shift
+      ;;
+  esac
+done
+
+if [[ -z "$TEMPLATENAME" ]]
+then
+  usage && exit 1
+fi
+
+TEMPLATEPATH="$(ls "$TEMPLATEDIR"/*"$TEMPLATENAME"*)"
+
+C=$(echo "$TEMPLATEPATH" | wc -w)
+
+if (( C > 1 ))
+then
+  echo " Ambiguous template name. Matches:"
+  for template in $TEMPLATEPATH
+  do
+    echo "  - $template"
+  done
+  exit 1
+elif (( C < 1 ))
+then
+  echo " No templates found!"
+  exit 1
+fi
+
+if [[ ! -f "$TEMPLATEPATH" ]]
+then
+  echo "template $TEMPLATENAME not found"
+  exit 1
+fi
+
+TEMPLATECONTENTS=$(sed -f "$VARSFILE" "$TEMPLATEPATH" | sed -e "s,DATE,$DATE," | sed -e "s,YEAR,$YEAR,")
+if [[ -z "$OUTPUTNAME" ]]
+then
+  echo "$TEMPLATECONTENTS"
+else
+  echo "$TEMPLATECONTENTS" > "$OUTPUTNAME"
+fi
