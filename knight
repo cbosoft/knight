@@ -1,0 +1,19 @@
+#!/bin/bash
+
+usage() {
+  echo ""
+  echo " knight is a template-based file generator."
+  echo ""
+  echo " Usage:"
+  echo "   knight -f <file-type>"
+  echo ""
+  echo " This will copy the template file from ~/.templates and"
+  echo " perform some variable substitution on the file, depending"
+  echo " on the sed script ~/.knight_vars and the output of some"
+  echo " commands."
+  echo ""
+}
+
+FILE="NONE"
+DATE=$(date +"%d %B %Y")
+YEAR=$(date +%Y)
