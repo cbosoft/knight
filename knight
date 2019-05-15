@@ -9,6 +9,7 @@ usage() {
   echo ""
   echo " Usage:"
   echo "   knight <template-name> [<output-name>]"
+  echo "   knight -h|--help"
   echo ""
   echo " This will copy the template file from \"$TEMPLATEDIR\" and"
   echo " perform some variable substitution on the file, depending"
@@ -29,6 +30,9 @@ while [[ $# -gt 0 ]]
 do
   key="$1"
   case $key in
+    -h|--help)
+      usage && exit 0
+      ;;
     *)
       if [[ -z $TEMPLATENAME ]]
       then
