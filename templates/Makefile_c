@@ -1,0 +1,15 @@
+CXX = gcc
+CFLAGS = -Wall -pedantic -g
+LINK = 
+
+RECIPENAME: $(OBJS)
+	@$(CXX) -o $@ $(CFLAGS) $(OBJS) $(LINK)
+
+%.o: %.c
+	$(CXX) $(CFLAGS) -c -o $@ $< $(LINK)
+
+SRCS = $(wildcard *.c)
+OBJS = $(SRCS:.c=.o)
+
+clean:
+	rm -rf *.o
