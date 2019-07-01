@@ -12,3 +12,18 @@ knight <template-name>
 knight -h | --help
 knight -l | --list
 ```
+
+# Variable replacement
+
+A user `sed` script is used to perform replacements on the copied template. This
+script contains information on the user, such as name, email address, and other
+information you may want to have automatically copied into templates as you see
+fit.
+
+An example:
+
+```sed
+s,NAME,Chris Boyle,g
+s,EMAIL,chris@email.com,g
+s,PHONE,555-12345,g
+```
