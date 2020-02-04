@@ -53,7 +53,7 @@ then
   usage && exit 1
 fi
 
-TEMPLATEPATH="$(ls "$TEMPLATEDIR"/*"$TEMPLATENAME"*)"
+TEMPLATEPATH="$(ls "$TEMPLATEDIR"/"$TEMPLATENAME" 2> /dev/null)"
 
 C=$(echo "$TEMPLATEPATH" | wc -w)
 
@@ -67,6 +67,23 @@ then
   exit 1
 elif (( C < 1 ))
 then
+  TEMPLATEPATH="$(ls "$TEMPLATEDIR"/*"$TEMPLATENAME"* 2> /dev/null)"
+  
+  C=$(echo "$TEMPLATEPATH" | wc -w)
+  
+  if (( C > 1 ))
+  then
+    echo " Ambiguous template name. Matches:"
+    for template in $TEMPLATEPATH
+    do
+      echo "  - $template"
+    done
+    exit 1
+  elif (( C < 1 ))
+  then
+    echo " No templates found!"
+    exit 1
+  fi
   echo " No templates found!"
   exit 1
 fi
