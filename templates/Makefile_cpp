@@ -1,0 +1,17 @@
+CXX = g++
+CFLAGS = -Wall -Wextra -pedantic -g
+LINK = 
+OBJS = obj/main.o
+EXE = a.out
+
+.PHONY: all
+
+all: $(OBJS)
+	@$(CXX) -o $(EXE) $(CFLAGS) $(OBJS) $(LINK)
+
+obj/%.o: src/%.cpp
+	mkdir -p `dirname $@`
+	$(CXX) $(CFLAGS) -c -o $@ $< $(LINK)
+
+clean:
+	rm -rf obj $(EXE)
